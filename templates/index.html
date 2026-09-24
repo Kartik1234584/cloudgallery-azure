@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudGallery — Azure Image Storage</title>
+  <meta name="description" content="Cloud-ready image management web application designed for Azure Blob Storage integration.">
+
+  <!-- Inter Font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19.1 19 21l3-3"></path>
+              <path d="M22 10a5 5 0 0 0-9.1-2.7 6 6 0 0 0-8.9 5.8A5 5 0 0 0 6 20h7"></path>
+            </svg>
+          </div>
+          <div class="brand-title">
+            CloudGallery
+            <span>Azure Storage</span>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-menu">
+
+            <li class="nav-item active" data-tab="dashboard">
+              <button id="nav-dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Dashboard
+              </button>
+            </li>
+
+            <li class="nav-item" data-tab="gallery">
+              <button id="nav-gallery">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                Gallery
+              </button>
+            </li>
+
+            <li class="nav-item" data-tab="upload">
+              <button id="nav-upload">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload Images
+              </button>
+            </li>
+
+            <li class="nav-item" data-tab="settings">
+              <button id="nav-settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Settings
+              </button>
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Azure Blob Status -->
+      <div class="sidebar-footer">
+        <div class="mode-badge">
+          <span class="status-dot"></span>
+          <span>Storage: Azure Blob</span>
+        </div>
+        <div class="azure-hint">
+          Azure Blob Storage connected successfully.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+
+          <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <h1 class="page-title" id="page-title-text">Dashboard</h1>
+        </div>
+
+        <div class="header-right">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle light and dark theme">
+
+            <!-- Sun Icon for Dark Mode -->
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+
+          </button>
+        </div>
+      </header>
+
+      <!-- View Container -->
+      <main class="view-container">
+
+        <!-- DASHBOARD VIEW -->
+        <section class="tab-view active" id="dashboard-view">
+
+          <!-- Summary Cards -->
+          <div class="stats-grid">
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Total Images</div>
+                <div class="stat-value" id="stat-total-images">0</div>
+                <div class="stat-subtext">Stored in repository</div>
+              </div>
+
+              <div class="stat-icon primary">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Storage Used</div>
+                <div class="stat-value" id="stat-storage-used">0 B</div>
+                <div class="stat-subtext">Total image size</div>
+              </div>
+
+              <div class="stat-icon azure">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Recent Uploads</div>
+                <div class="stat-value" id="stat-recent-uploads">0</div>
+                <div class="stat-subtext">Last 24 Hours</div>
+              </div>
+
+              <div class="stat-icon success">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- AZURE BLOB STATUS -->
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Storage Status</div>
+                <div class="stat-value" style="font-size: 1.25rem;" id="stat-storage-status">Azure Blob</div>
+                <div class="stat-subtext">Connected</div>
+              </div>
+
+              <div class="stat-icon success">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                </svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Upload Banner -->
+          <div class="dashboard-banner">
+
+            <div class="banner-content">
+              <h2>Cloud-Ready Image Management</h2>
+              <p>
+                Store, manage, preview, and organize your images with
+                Microsoft Azure Blob Storage.
+              </p>
+            </div>
+
+            <button class="banner-btn" id="banner-upload-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload Images Now
+            </button>
+
+          </div>
+
+          <!-- Recent Uploads -->
+          <div class="section-header">
+            <h2 class="section-title">Recent Uploads</h2>
+
+            <a href="#" class="view-all-link" id="dash-view-all">
+              View All Gallery
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <div class="gallery-grid" id="dashboard-recent-grid">
+            <!-- Dynamically populated via app.js -->
+          </div>
+
+        </section>
+
+
+        <!-- GALLERY VIEW -->
+        <section class="tab-view" id="gallery-view">
+
+          <!-- Filter & Search Toolbar -->
+          <div class="toolbar">
+
+            <div class="search-box">
+              <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+
+              <input
+                type="text"
+                class="search-input"
+                id="search-input"
+                placeholder="Search images by filename..."
+              >
+            </div>
+
+            <div class="filter-group">
+              <button class="filter-pill active" data-filter="all">All Format</button>
+              <button class="filter-pill" data-filter="jpg">JPG/JPEG</button>
+              <button class="filter-pill" data-filter="png">PNG</button>
+              <button class="filter-pill" data-filter="webp">WEBP</button>
+              <button class="filter-pill" data-filter="gif">GIF</button>
+            </div>
+
+            <div class="toolbar-actions">
+
+              <select class="select-control" id="sort-select" aria-label="Sort images dropdown">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name-asc">Name A - Z</option>
+                <option value="name-desc">Name Z - A</option>
+                <option value="size-desc">Largest File</option>
+                <option value="size-asc">Smallest File</option>
+              </select>
+
+              <div class="view-layout-toggle">
+
+                <button class="view-btn active" id="btn-grid-view" title="Grid View" aria-label="Grid view toggle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                </button>
+
+                <button class="view-btn" id="btn-list-view" title="List View" aria-label="List view toggle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Gallery Grid -->
+          <div class="gallery-grid" id="main-gallery-grid">
+            <!-- JavaScript will render cards here -->
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state" id="empty-state" style="display: none;">
+
+            <div class="empty-icon-wrap">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+
+            <h3>No images found</h3>
+
+            <p>
+              Upload your first image to start building your CloudGallery storage.
+            </p>
+
+            <button class="btn-primary" id="empty-upload-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Upload Images
+            </button>
+
+          </div>
+
+        </section>
+
+
+        <!-- UPLOAD VIEW -->
+        <section class="tab-view" id="upload-view">
+
+          <div class="upload-card">
+
+            <!-- Drag & Drop Zone -->
+            <div class="drop-zone" id="drop-zone">
+
+              <input
+                type="file"
+                id="file-input"
+                multiple
+                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                style="display: none;"
+              >
+
+              <div class="drop-icon-circle">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+
+              <div class="drop-title">Drag & Drop Images Here</div>
+
+              <div class="drop-subtext">
+                or click to browse from your computer
+              </div>
+
+              <button class="btn-primary" type="button" id="browse-btn">
+                Choose Images
+              </button>
+
+              <div class="file-specs">
+                <span>Supported: JPG, JPEG, PNG, GIF, WEBP</span>
+                <span>•</span>
+                <span>Max file size: 10 MB</span>
+              </div>
+
+            </div>
+
+
+            <!-- Queue & Pre-upload Preview -->
+            <div id="queue-wrapper" style="display: none;">
+
+              <div class="upload-queue-header">
+
+                <h3 class="section-title">
+                  Selected Images (<span id="queue-count">0</span>)
+                </h3>
+
+                <button class="btn-primary" id="start-upload-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Upload Files
+                </button>
+
+              </div>
+
+              <div class="queue-grid" id="queue-list">
+                <!-- Selected preview items added dynamically -->
+              </div>
+
+              <!-- Upload Progress UI -->
+              <div class="progress-bar-container" id="progress-container">
+                <div class="progress-fill" id="progress-bar"></div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- SETTINGS VIEW -->
+        <section class="tab-view" id="settings-view">
+
+          <!-- Appearance Settings -->
+          <div class="settings-section">
+
+            <div class="settings-header">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+              </svg>
+
+              <h3>Appearance & Theme</h3>
+            </div>
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+                <h4>Dark Theme Mode</h4>
+                <p>Switch between light and dark visual interfaces</p>
+              </div>
+
+              <button class="btn-secondary" id="settings-theme-toggle">
+                Toggle Theme
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Gallery View Preference Settings -->
+          <div class="settings-section">
+
+            <div class="settings-header">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              </svg>
+
+              <h3>Gallery Layout Preferences</h3>
+            </div>
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+                <h4>Default Gallery View</h4>
+                <p>Choose your preferred gallery layout mode</p>
+              </div>
+
+              <select class="select-control" id="settings-view-select">
+                <option value="grid">Grid View</option>
+                <option value="list">List View</option>
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <!-- Storage Architecture Settings -->
+          <div class="settings-section">
+
+            <div class="settings-header">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+              </svg>
+
+              <h3>Cloud & Storage Architecture</h3>
+            </div>
+
+            <div class="azure-status-box">
+
+              <div class="azure-info-item">
+                <span>Current Storage Mode</span>
+                <span class="status-badge active">Azure Blob Storage</span>
+              </div>
+
+              <div class="azure-info-item">
+                <span>Azure Blob Storage Integration</span>
+                <span class="status-badge active">Connected</span>
+              </div>
+
+              <div class="azure-info-item">
+                <span>Target Blob Container Name</span>
+                <code style="font-family: 'JetBrains Mono', monospace;">images</code>
+              </div>
+
+              <div class="azure-info-item">
+                <span>Backend Provider</span>
+                <span>Azure Blob Storage</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- LIGHTBOX / IMAGE PREVIEW MODAL -->
+  <div class="modal-overlay" id="lightbox-modal">
+
+    <div class="modal-card">
+
+      <div class="modal-header">
+
+        <h3 class="modal-title" id="modal-filename">
+          Image Title
+        </h3>
+
+        <button class="close-modal-btn" id="modal-close-btn" aria-label="Close image modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-image-wrap">
+          <img src="" alt="Preview" class="modal-image" id="modal-img-element">
+        </div>
+
+        <div class="modal-sidebar">
+
+          <div class="meta-group">
+
+            <div class="meta-item">
+              <label>Filename</label>
+              <span id="modal-meta-filename">-</span>
+            </div>
+
+            <div class="meta-item">
+              <label>File Type</label>
+              <span id="modal-meta-type">-</span>
+            </div>
+
+            <div class="meta-item">
+              <label>File Size</label>
+              <span id="modal-meta-size">-</span>
+            </div>
+
+            <div class="meta-item">
+              <label>Upload Date</label>
+              <span id="modal-meta-date">-</span>
+            </div>
+
+          </div>
+
+
+          <div class="modal-actions">
+
+            <a
+              href="#"
+              class="btn-primary"
+              id="modal-download-btn"
+              download
+              style="justify-content: center;"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download Image
+            </a>
+
+            <button class="btn-danger" id="modal-delete-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              Delete Image
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- DELETE CONFIRMATION DIALOG MODAL -->
+  <div class="modal-overlay" id="delete-modal">
+
+    <div class="modal-card confirm-dialog">
+
+      <div class="confirm-icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </div>
+
+      <h3>Delete Image</h3>
+
+      <p>
+        Are you sure you want to delete
+        <strong id="delete-target-name">this file</strong>?
+        This action cannot be undone.
+      </p>
+
+      <div class="confirm-actions">
+
+        <button class="btn-secondary" id="confirm-delete-cancel">
+          Cancel
+        </button>
+
+        <button class="btn-danger" id="confirm-delete-btn">
+          Delete Image
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOAST NOTIFICATIONS CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+
+  <!-- App Main JavaScript Logic -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
