@@ -127,4 +127,4 @@ http://127.0.0.1:5000
    # Replace delete_from_storage() with container_client.delete_blob()
    ```
 
-Because the frontend relies strictly on standard JSON REST API contracts (`/api/images`, `/api/upload`, `/api/delete/<filename>`), swapping local storage for Azure Blob Storage in `app.py` requires **zero changes** to the frontend code!
+Because the frontend relies strictly on standard JSON REST API contracts (`/api/images`, `/api/upload`, `/api/delete/<filename>`), swapping local storage for Azure Blob Storage in `app.py` requires **zero changes** to the frontend code.
