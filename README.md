@@ -1,130 +1,410 @@
-# CloudGallery — Azure Image Storage
+# ☁️ CloudGallery – Azure Image Storage & Management
 
-A modern, responsive, cloud-ready image management web application built with **Python 3**, **Flask**, **HTML5**, **CSS3**, and **Vanilla JavaScript**.
+CloudGallery is a cloud-based image management web application built with **Python Flask** and **Microsoft Azure Blob Storage**. It allows users to upload, view, download, and delete images through a web interface while storing the images in an Azure Blob Storage container.
 
-Currently running in **Local Demo Mode** (storing images locally in `uploads/`), this application is engineered with a modular backend architecture specifically prepared for future integration with **Microsoft Azure Blob Storage**.
+## 📌 Project Overview
 
----
+The project demonstrates hands-on experience with:
 
-## 🌟 Features
+- Microsoft Azure Storage Account
+- Azure Blob Storage
+- Azure Blob Containers
+- Python Flask
+- REST API endpoints
+- Image upload and management
+- Environment-based configuration
+- Git and GitHub
+- Secure cloud credential handling
 
-- 📊 **Dashboard Overview**: Summary stat cards displaying Total Images, Total Storage Used, Recent Uploads, and Storage Mode Status.
-- 📤 **Drag & Drop Image Upload**: Interactive file picker supporting multiple file selection, live pre-upload thumbnails, file size & format validation, queue management, and upload progress bars.
-- 🖼️ **Image Gallery**: Responsive grid and list views for desktop, laptop, tablet, and mobile displays.
-- 🔍 **Real-Time Search**: Instant filename searching as you type.
-- 🎯 **Multi-Criteria Filtering**: Filter images by file format (`JPG/JPEG`, `PNG`, `WEBP`, `GIF`, or `All`).
-- 🔄 **Dynamic Sorting**: Sort images by *Newest First*, *Oldest First*, *Name A-Z*, *Name Z-A*, *Largest File*, and *Smallest File*.
-- 🔍 **Lightbox Modal**: Fullscreen high-resolution image preview with full metadata sidebar (filename, file size, file format, upload timestamp).
-- ⬇️ **Direct Image Download**: Single-click attachment download for any stored image.
-- 🗑️ **Safe File Deletion**: Instant deletion with confirmation dialog modal and dynamic dashboard statistic updates.
-- 🌙 **Dark & Light Mode**: Seamless UI color theme toggle with `localStorage` persistence.
-- 🔔 **Toast Notification Engine**: Non-intrusive interactive alerts for success, warnings, error validation, and file actions.
-- 🔒 **Security Best Practices**: File format whitelisting, 10MB per-file size enforcement, and safe file name handling using `secure_filename`.
+### Architecture
 
----
+```
+User
+  ↓
+CloudGallery Web Interface
+  ↓
+Python Flask Application
+  ↓
+Azure Blob Storage SDK
+  ↓
+Azure Storage Account
+  ↓
+images Blob Container
+```
 
-## 🛠️ Technology Stack
+## ✨ Features
 
-- **Backend**: Python 3, Flask, Werkzeug
-- **Frontend**: HTML5, Vanilla CSS3 (Custom Design Tokens), Vanilla JavaScript (ES6+)
-- **Storage**: Local Demo Mode (`uploads/`) — *Azure Blob Storage Ready*
-- **No Heavy Frameworks**: No React, Vue, Angular, Tailwind, Docker, or external databases required.
+- 📤 Upload images
+- 🖼️ View images in a gallery
+- ☁️ Store images in Azure Blob Storage
+- ⬇️ Download images
+- 🗑️ Delete images
+- 🔎 Search images by filename
+- 🏷️ Filter images by format
+- 📊 Dashboard statistics
+- 📅 Upload information
+- 📦 File-size information
+- 🔐 Environment-based Azure configuration
+- 🛡️ Image-format validation
+- 📏 10 MB maximum file size
+- 🔄 Duplicate filename handling
 
----
+## 🛠️ Technologies Used
+
+### Cloud
+
+- Microsoft Azure
+- Azure Storage Account
+- Azure Blob Storage
+- Azure Blob Container
+
+### Backend
+
+- Python
+- Flask
+- Azure Storage Blob SDK
+- python-dotenv
+- Werkzeug
+
+### Frontend
+
+- HTML5
+- CSS3
+- JavaScript
+
+### Tools
+
+- Visual Studio Code
+- Git
+- GitHub
+- Python Virtual Environment
 
 ## 📂 Project Structure
 
 ```
 CLOUDGALLERY/
 │
-├── app.py                      # Core Flask backend with REST API routes & storage abstraction
-├── requirements.txt            # Python dependencies (Flask, Werkzeug)
-├── README.md                   # Project documentation & Azure integration guide
-├── .gitignore                  # Git ignore rules for venv, uploads, and pycache
-│
-├── templates/
-│   └── index.html              # Main Single-Page Application (SPA) HTML layout
-│
 ├── static/
-│   ├── css/
-│   │   └── style.css           # Custom Design System, Light/Dark themes, CSS Grid/Flex
-│   └── js/
-│       └── app.js              # Vanilla JS application state, upload queue, toast notifications
-│
-└── uploads/
-    └── .gitkeep                # Local image storage folder for development/testing
+├── templates/
+├── uploads/
+├── app.py
+├── requirements.txt
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
----
+## ☁️ Azure Storage Configuration
 
-## 🚀 How to Run Locally
+CloudGallery uses an Azure Storage Account containing an `images` Blob container.
 
-### 1. Prerequisites
-Ensure you have Python 3.8+ installed on your system.
+```
+Storage Account
+      ↓
+Blob Storage
+      ↓
+images
+      ├── image1.png
+      ├── image2.jpg
+      └── image3.webp
+```
 
-### 2. Create Virtual Environment & Activate
+### Environment Variables
 
-**Windows:**
-```cmd
+Create a local `.env` file:
+
+```
+AZURE_STORAGE_CONNECTION_STRING=your_azure_storage_connection_string
+AZURE_STORAGE_CONTAINER=images
+```
+
+**Never commit the real `.env` file or Azure credentials to GitHub.**
+
+The repository contains `.env.example`:
+
+```
+AZURE_STORAGE_CONNECTION_STRING=your_azure_storage_connection_string_here
+AZURE_STORAGE_CONTAINER=images
+```
+
+## 🔐 Security
+
+Azure credentials are stored through environment variables rather than hardcoded in application source code.
+
+The `.env` file should remain in `.gitignore`:
+
+```
+.env
+```
+
+Never publish:
+
+- Azure Storage connection strings
+- Azure access keys
+- API keys
+- Passwords
+- Other cloud credentials
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```
+git clone https://github.com/Kartik1234584/cloudgallery-azure.git
+cd cloudgallery-azure
+```
+
+### 2. Create a virtual environment
+
+Windows:
+
+```
 python -m venv venv
-venv\Scripts\activate
 ```
 
-**macOS / Linux:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
+Activate:
+
+```
+venv\Scripts\Activate.ps1
 ```
 
-### 3. Install Dependencies
-```bash
+If required:
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+```
+
+### 3. Install dependencies
+
+```
 pip install -r requirements.txt
 ```
 
-### 4. Start the Application
-```bash
+### 4. Configure `.env`
+
+Create `.env` in the project root:
+
+```
+AZURE_STORAGE_CONNECTION_STRING=your_azure_storage_connection_string
+AZURE_STORAGE_CONTAINER=images
+```
+
+Use your own Azure Storage connection string.
+
+## 🪣 Azure Blob Storage Setup
+
+To recreate the cloud environment:
+
+1. Open Azure Portal.
+2. Create a Storage Account.
+3. Create a Blob container named `images`.
+4. Obtain the Storage Account connection string.
+5. Add it to your local `.env`.
+6. Run the Flask application.
+
+Recommended learning configuration:
+
+```
+Performance: Standard
+Replication: LRS
+Account Kind: StorageV2
+```
+
+## ▶️ Run the Application
+
+```
 python app.py
 ```
 
-### 5. Access in Web Browser
-Open your web browser and navigate to:
+Open:
+
 ```
 http://127.0.0.1:5000
 ```
 
----
+## 📤 Image Upload Workflow
 
-## ☁️ Future Azure Blob Storage Integration
+```
+Select Image
+     ↓
+CloudGallery Upload Interface
+     ↓
+Flask Upload API
+     ↓
+Validate File
+     ↓
+Azure Blob Storage
+     ↓
+images Container
+```
 
-> [!NOTE]
-> Azure Blob Storage integration will be added in a future step. Real Azure resources, connection strings, or credentials are **NOT** required to run the local demo application.
+Supported formats:
 
-### How to Connect Azure Blob Storage Later:
+```
+JPG
+JPEG
+PNG
+GIF
+WEBP
+```
 
-1. **Install Azure Storage Blob SDK**:
-   ```bash
-   pip install azure-storage-blob
-   ```
+Maximum file size:
 
-2. **Configure Environment Variables**:
-   Set your Azure Storage Account Connection String as an environment variable (never hardcode secrets into code):
-   ```cmd
-   set AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=your_account;AccountKey=your_key;EndpointSuffix=core.windows.net"
-   ```
+```
+10 MB per file
+```
 
-3. **Update `app.py` Storage Functions**:
-   In `app.py`, locate the `# FUTURE AZURE BLOB STORAGE INTEGRATION` section and update the file handling methods:
+## 🔌 API Endpoints
 
-   ```python
-   from azure.storage.blob import BlobServiceClient
+### Get Images
 
-   connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-   blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-   container_client = blob_service_client.get_container_client("cloudgallery-container")
+```
+GET /api/images
+```
 
-   # Replace list_storage_images() with container_client.list_blobs()
-   # Replace save_to_storage() with container_client.upload_blob()
-   # Replace delete_from_storage() with container_client.delete_blob()
-   ```
+Returns stored image information.
 
-Because the frontend relies strictly on standard JSON REST API contracts (`/api/images`, `/api/upload`, `/api/delete/<filename>`), swapping local storage for Azure Blob Storage in `app.py` requires **zero changes** to the frontend code.
+### Get Statistics
+
+```
+GET /api/stats
+```
+
+Returns dashboard statistics such as image count, storage size, recent uploads, and storage status.
+
+### Upload Images
+
+```
+POST /api/upload
+```
+
+Uploads image files.
+
+### Download Image
+
+```
+GET /api/download/<filename>
+```
+
+Downloads an image.
+
+### Delete Image
+
+```
+DELETE /api/delete/<filename>
+```
+
+Deletes an image.
+
+## 🖥️ Application Pages
+
+### Dashboard
+
+Displays image count, storage usage, recent uploads, and storage status.
+
+### Gallery
+
+Displays stored images with search, format filters, preview, download, and delete options.
+
+### Upload Images
+
+Provides the image upload interface.
+
+### Settings
+
+Provides application-related settings.
+
+## 🧪 Hands-On Testing
+
+The project was tested hands-on with Azure Blob Storage, including:
+
+- Creating an Azure Storage Account
+- Creating the `images` Blob container
+- Connecting Flask to Azure Blob Storage
+- Uploading images through the website
+- Verifying images inside Azure Blob Storage
+- Displaying Azure-stored images in the Gallery
+- Testing multiple image uploads
+- Downloading images
+- Deleting images
+- Verifying Azure connection status
+- Testing supported image formats
+- Testing the file-size limit
+- Testing duplicate filename handling
+
+## 📸 Recommended Screenshots
+
+For project documentation, include:
+
+1. CloudGallery Dashboard
+2. CloudGallery Gallery with uploaded images
+3. Azure Storage Account
+4. Azure `images` container
+5. Uploaded images visible inside the Azure container
+6. Azure-connected status in CloudGallery
+
+## 💰 Azure Cost Management
+
+This project was created as a learning and portfolio project with a focus on minimizing Azure usage.
+
+For temporary testing environments:
+
+- Use suitable low-cost/free options where available.
+- Monitor Azure usage and cost.
+- Delete unused Azure resources after testing.
+- Do not leave unnecessary cloud resources running.
+
+## 🔒 Credential Safety Checklist
+
+Before pushing to GitHub:
+
+```
+[✓] .env is in .gitignore
+[✓] .env is NOT committed
+[✓] .env.example contains placeholders only
+[✓] No Azure key is hardcoded in app.py
+[✓] No connection string is published in README.md
+[✓] No credentials are stored in frontend files
+```
+
+## 🎯 Learning Outcomes
+
+This project provided hands-on experience with:
+
+- Microsoft Azure
+- Azure Blob Storage
+- Azure Storage Accounts
+- Cloud object storage
+- Blob containers
+- Azure Storage authentication
+- Python Flask
+- REST APIs
+- File upload processing
+- Cloud-based file management
+- Environment variables
+- Cloud credential management
+- Git and GitHub
+- Azure resource management
+
+## 💼 Resume Description
+
+**CloudGallery – Azure Image Storage & Management**
+
+> Developed a cloud-based image management application using Python Flask and Microsoft Azure Blob Storage, enabling users to upload, view, download, and delete images through a web interface. Integrated Azure Blob Storage using environment-based credentials and implemented cloud-backed image management.
+
+### Technologies
+
+```
+Python | Flask | Microsoft Azure | Azure Blob Storage |
+HTML | CSS | JavaScript | Git | GitHub
+```
+
+## 👨‍💻 Author
+
+**Kartik Sadhu**
+
+MCA – Cloud Computing
+
+## 📄 License
+
+This project is intended for educational, learning, and portfolio purposes.
